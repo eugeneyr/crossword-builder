@@ -1,0 +1,61 @@
+Instantiated builders = 101000000  *** known puzzles = 43018772 *** time spent = 702.600s speed = 143751.78 tasks/s active tasks = 4 queued submissions = 99581 ***
+Current Best Score = 0.534
+Avg Perm Length = 2.114
+Max Seen Perm Size Length=472
+Current Board:
+SCORE = 0.4464126128210674
+BORER.INDEX
+O..........
+T.SINUS....
+A.I........
+S.M.SINEW..
+..A........
+T...A.UMPS.
+R.O.H......
+A.V.E.BRASH
+Y.E.D......
+..R..FUSEL.
+Best:
+SCORE = 0.5336456310063348
+BORER.BOTAS
+R.........I
+AHED.UMPS.N
+S...S.....E
+H.F.INDEX.W
+..U.M......
+O.STACKER..
+V.E........
+E.L.COCCOID
+R..........
+.TRAY.SINUS
+
+Best:
+SCORE = 0.5433230503611735
+BORER.BOTAS
+R..........
+A.FUSEL.U.C
+S...I...M.O
+H.SINEW.P.C
+..T.U...S.C
+A.A.SIMA..O
+H.C.......I
+E.K.INDEX.D
+D.E........
+.TRAY.OVER.
+
+
+the reference one:
+score = 0.583071181018395
+BORER.BOTAS
+R......V..I
+A....C.E..N
+S.F..O.R..E
+H.U..C..T.W
+..STACKER..
+..E..O..A..
+S.L..I..Y.U
+I..INDEX..M
+M.........P
+AHED..SINUS
+
+
