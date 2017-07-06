@@ -23,7 +23,7 @@ public class CrosswordBuilderTest {
     @Test
     public void testGetAllPermutations() throws Exception {
         BeautifulCrossword bc = new BeautifulCrossword(new String[] {"A", "B"}, 3, new int[] {1, 1, 1, 1});
-        CrosswordBuilder b = new CrosswordBuilder(bc, new Board(3), 3, 0, Direction.ACROSS);
+        CrosswordBuilder b = new CrosswordBuilder(bc, new Board(3), PlacementSequenceGeneratorFactory.getGenerator(3).getFirst());
         Collection<?> perms = b.getAllPermutations(b.getBoard(), 0, Direction.ACROSS);
         assertEquals(9, perms.size());
 

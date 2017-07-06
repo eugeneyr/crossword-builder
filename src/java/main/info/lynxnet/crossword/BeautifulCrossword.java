@@ -241,7 +241,7 @@ public class BeautifulCrossword {
         n = N;
         this.weights = weights;
         Board board = new Board(n);
-        execute(new CrosswordBuilder(this, board, n, 0, Direction.ACROSS));
+        execute(new CrosswordBuilder(this, board, PlacementSequenceGeneratorFactory.getGenerator(n).getFirst()));
 
         List<Board> puzzles = new ArrayList<>(getBestPuzzles());
 

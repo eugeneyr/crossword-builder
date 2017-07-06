@@ -39,7 +39,7 @@ public class ParallelBeautifulCrossword extends BeautifulCrossword {
         n = N;
         this.weights = weights;
         Board board = new Board(n);
-        execute(new CrosswordBuilder(this, board, n, 0, Direction.ACROSS));
+        execute(new CrosswordBuilder(this, board, PlacementSequenceGeneratorFactory.getGenerator(n).getFirst()));
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
