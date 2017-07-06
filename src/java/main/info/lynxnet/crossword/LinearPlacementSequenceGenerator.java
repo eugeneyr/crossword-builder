@@ -15,23 +15,28 @@ public class LinearPlacementSequenceGenerator implements PlacementSequenceGenera
 
     @Override
     public Placement getFirst() {
-        return new Placement(0, Direction.ACROSS, this.boardSize);
+        Placement head = new Placement(0, Direction.ACROSS, this.boardSize);
+        Placement curr = head;
+        do {
+            curr.next = getNext(curr);
+            curr = curr.next;
+        } while (curr != null);
+        return head;
     }
 
-    @Override
-    public Placement getNext(Placement current) {
+    private Placement getNext(Placement current) {
         if (current == null) {
             return getFirst();
         }
-        switch (current.getDirection()) {
+        switch (current.direction) {
             case DOWN:
-                if (current.getPosition() >= 0 && current.getPosition() < this.boardSize - 1) {
-                    return new Placement(current.getPosition() + 1, Direction.ACROSS, this.boardSize);
+                if (current.position >= 0 && current.position < this.boardSize - 1) {
+                    return new Placement(current.position + 1, Direction.ACROSS, this.boardSize);
                 }
                 break;
             case ACROSS:
-                if (current.getPosition() >= 0 && current.getPosition() < this.boardSize) {
-                    return new Placement(current.getPosition(), Direction.DOWN, this.boardSize);
+                if (current.position >= 0 && current.position < this.boardSize) {
+                    return new Placement(current.position, Direction.DOWN, this.boardSize);
                 }
                 break;
         }

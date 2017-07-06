@@ -25,6 +25,8 @@ public class CrosswordRunner {
         bc.generateCrossword(n, fileName, weights);
         List<Board> puzzles = new ArrayList<>(bc.getBestPuzzles());
 
+        System.out.println("FINAL STATS: " + bc.getState());
+
         if (puzzles.size() > 0) {
             Board best = puzzles.get(puzzles.size() - 1);
             System.out.println("Best:");

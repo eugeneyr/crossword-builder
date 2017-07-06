@@ -1,5 +1,6 @@
 package info.lynxnet.crossword;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /*
@@ -184,7 +185,10 @@ public class BeautifulCrossword {
 
     public void printBoard(Board board) {
         String[] b = board.asStringArray();
-        System.out.println("SCORE = " + calculateScore(b));
+        double score = calculateScore(b);
+        System.out.println(
+                String.format("SCORE = %f\nWORDS = %d/%d",
+                        score, board.getWords().size(), store.getWords().size()));
         for (String s : b) {
             System.out.println(s);
         }
@@ -241,7 +245,20 @@ public class BeautifulCrossword {
         n = N;
         this.weights = weights;
         Board board = new Board(n);
-        execute(new CrosswordBuilder(this, board, PlacementSequenceGeneratorFactory.getGenerator(n).getFirst()));
+        try {
+            execute(new CrosswordBuilder(
+                    this,
+                    board,
+                    Constants.PLACEMENT_GENERATOR_CLASS.getConstructor(Integer.TYPE).newInstance(n).getFirst()));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
 
         List<Board> puzzles = new ArrayList<>(getBestPuzzles());
 

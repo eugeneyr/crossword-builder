@@ -9,26 +9,19 @@ public class CrosswordBuilder implements Callable<Void> {
     private Placement placement;
     private Board board;
 
-    public static final int MAX_PERM_SET_SIZE = 4;
-    public static final boolean RANK_BY_SCORES = true;
-
     public CrosswordBuilder(BeautifulCrossword context, Board board, Placement placement) {
-        this.n = placement.getBoardSize();
+        this.n = placement.boardSize;
         this.context = context;
         this.board = board;
         this.placement = placement;
     }
 
-    public int getN() {
-        return n;
-    }
-
     public int getI() {
-        return placement.getPosition();
+        return placement.position;
     }
 
     public Direction getDirection() {
-        return placement.getDirection();
+        return placement.direction;
     }
 
     public Board getBoard() {
@@ -88,14 +81,14 @@ public class CrosswordBuilder implements Callable<Void> {
         }
 
         Collection<Collection<WordPlacement>> permutations = getAllPermutations(
-                board, placement.getPosition(), placement.getDirection());
+                board, placement.position, placement.direction);
 
         for (Collection<WordPlacement> perm : permutations) {
             Board newBoard = board.clone();
             for (WordPlacement wp : perm) {
                 newBoard.addWordPlacement(wp);
             }
-            Placement newPlace = PlacementSequenceGeneratorFactory.getGenerator(placement.getBoardSize()).getNext(placement);
+            Placement newPlace = placement.next;
             // - if all placements are exhausted, add B0 to the list of results.
             if (newPlace == null) {
                 context.addKnownPuzzle(newBoard);
@@ -121,12 +114,12 @@ public class CrosswordBuilder implements Callable<Void> {
             Metrics.maxPermSetSize.compareAndSet(maxSize, result.size());
         }
 
-        if (RANK_BY_SCORES) {
+        if (Constants.RANK_BY_SCORES) {
             result.sort(new PermutationComparator(board, n, i, direction, context.getWeights()));
         }
 
-        if (result.size() > MAX_PERM_SET_SIZE) {
-            result = result.subList(0, MAX_PERM_SET_SIZE);
+        if (result.size() > Constants.MAX_PERM_SET_SIZE) {
+            result = result.subList(0, Constants.MAX_PERM_SET_SIZE);
         }
 
         return result;
@@ -192,8 +185,8 @@ public class CrosswordBuilder implements Callable<Void> {
     public String toString() {
         final StringBuilder sb = new StringBuilder("CrosswordBuilder{");
         sb.append("n=").append(n);
-        sb.append(", i=").append(placement.getPosition());
-        sb.append(", direction=").append(placement.getDirection());
+        sb.append(", i=").append(placement.position);
+        sb.append(", direction=").append(placement.direction);
         sb.append(", board=\n").append(String.join("\n", board.asStringArray()));
         sb.append("\n}");
         return sb.toString();

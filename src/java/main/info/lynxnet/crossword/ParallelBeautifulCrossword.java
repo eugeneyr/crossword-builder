@@ -1,5 +1,6 @@
 package info.lynxnet.crossword;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -39,19 +40,32 @@ public class ParallelBeautifulCrossword extends BeautifulCrossword {
         n = N;
         this.weights = weights;
         Board board = new Board(n);
-        execute(new CrosswordBuilder(this, board, PlacementSequenceGeneratorFactory.getGenerator(n).getFirst()));
         try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        while (!queue.isEmpty()) {
+            execute(new CrosswordBuilder(
+                    this,
+                    board,
+                    Constants.PLACEMENT_GENERATOR_CLASS.getConstructor(Integer.TYPE).newInstance(n).getFirst()));
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            while (!queue.isEmpty()) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
         List<Board> puzzles = new ArrayList<>(getBestPuzzles());
         return puzzles.size() > 0 ? puzzles.get(puzzles.size() - 1).asStringArray() : null;

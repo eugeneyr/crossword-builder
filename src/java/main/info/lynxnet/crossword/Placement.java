@@ -1,26 +1,15 @@
 package info.lynxnet.crossword;
 
 public class Placement {
-    private int position;
-    private Direction direction;
-    private int boardSize;
+    public int position;
+    public Direction direction;
+    public int boardSize;
+    public Placement next;
 
     public Placement(int position, Direction direction, int boardSize) {
         this.position = position;
         this.direction = direction;
         this.boardSize = boardSize;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public int getBoardSize() {
-        return boardSize;
     }
 
     @Override
@@ -41,5 +30,14 @@ public class Placement {
         result = 31 * result + (direction != null ? direction.hashCode() : 0);
         result = 31 * result + boardSize;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Placement{" +
+                "position=" + position +
+                ", direction=" + direction +
+                ", boardSize=" + boardSize +
+                '}';
     }
 }
