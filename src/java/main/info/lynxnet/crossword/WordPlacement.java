@@ -1,10 +1,10 @@
 package info.lynxnet.crossword;
 
 public class WordPlacement implements Cloneable {
-    private String word;
-    private int x;
-    private int y;
-    private Direction direction;
+    protected String word;
+    protected int x;
+    protected int y;
+    protected Direction direction;
 
     public WordPlacement(String word, int x, int y, Direction direction) {
         this.word = word;

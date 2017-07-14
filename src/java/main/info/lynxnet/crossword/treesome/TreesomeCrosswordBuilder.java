@@ -1,0 +1,127 @@
+package info.lynxnet.crossword.treesome;
+
+import com.sun.org.apache.xpath.internal.functions.FuncFalse;
+import info.lynxnet.crossword.*;
+
+import java.util.*;
+import java.util.concurrent.Callable;
+
+public class TreesomeCrosswordBuilder implements Callable<Void> {
+    private int n;
+    private BeautifulTreesomeCrossword context;
+    private PlacementTreeNode placement;
+    private Board board;
+
+    public TreesomeCrosswordBuilder(BeautifulTreesomeCrossword context, Board board, PlacementTreeNode placement) {
+        this.n = board.getN();
+        this.context = context;
+        this.board = board;
+        if (placement != null) {
+            this.placement = placement;
+        } else {
+            // create the "root" placement:
+            Collection<String> words = context.getStore().getWords();
+            if (words.isEmpty()) {
+                throw new IllegalStateException("The collection of available words is empty");
+            }
+            String firstWord = words.iterator().next();
+            this.placement = new PlacementTreeNode(firstWord, null, words, board);
+        }
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    /*
+         The outline of the algorithm to implement:
+
+         Build the tree of possible valid crossword boards using the set of all available words and the emty board.
+    */
+    @Override
+    public Void call() throws Exception {
+        long myNo = Metrics.builderInstances.incrementAndGet();
+        if (myNo % 1000000 == 0) {
+            double avgPermLength = 0.0;
+            long perms = Metrics.permCount.get();
+            long permGens = Metrics.permGenCount.get();
+            if (permGens > 0) {
+                avgPermLength = (double) perms / permGens;
+            }
+            System.out.printf("Instantiated builders = %d %s\nCurrent Best Score = %.3f\n" +
+                            "Avg Perm Length = %.3f\nMax Seen Perm Size Length=%d\nCurrent Board:\n",
+                    myNo,
+                    context.getState(),
+                    context.getTopScore(),
+                    avgPermLength,
+                    Metrics.maxPermSetSize.get());
+            context.printBoard(board);
+        }
+
+        if (placement.word == null) {
+            if (placement.availableWords.isEmpty()) {
+                context.addKnownPuzzle(placement.board);
+                return null;
+            } else {
+                placement.word = placement.availableWords.iterator().next();
+                placement.availableWords.remove(placement.word);
+            }
+        }
+
+        // all possible ways to place the current word on the current board
+        for (Direction dir : Direction.values()) {
+            for (int row = 0; row < n; row++) {
+                for (int col = 0; col < n; col++) {
+                    Board clonedBoard = board.clone();
+                    try {
+                        WordPlacement wp = new WordPlacement(placement.word, col, row, dir);
+                        clonedBoard.addWordPlacement(wp);
+                        Metrics.triedPlacements.incrementAndGet();
+                    } catch (IllegalArgumentException iae) {
+                        // it's OK, we'll just skip this cell / direction combo
+                        Metrics.blockedPlacements.incrementAndGet();
+                        continue;
+                    }
+                    ChildPosition pos = new ChildPosition(placement.word, col, row, dir, false);
+                    PlacementTreeNode child = new PlacementTreeNode(null, placement, placement.availableWords, clonedBoard);
+                    placement.children.put(pos, child);
+                }
+            }
+        }
+
+        if (placement.children.isEmpty()) {
+            context.addKnownPuzzle(placement.board);
+        }
+
+        // no placement of the current word
+        if (!placement.availableWords.isEmpty()) {
+            ChildPosition noWordPos = new ChildPosition(placement.word, -1, -1, null, true);
+            PlacementTreeNode child = new PlacementTreeNode(null, placement, placement.availableWords, placement.board);
+            placement.children.put(noWordPos, child);
+            Metrics.triedPlacements.incrementAndGet();
+        }
+
+        for (PlacementTreeNode ptn : placement.children.values()) {
+            context.execute(new TreesomeCrosswordBuilder(context, ptn.getBoard(), ptn));
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TreesomeCrosswordBuilder that = (TreesomeCrosswordBuilder) o;
+        return Objects.equals(placement, that.placement);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = n;
+        result = 31 * result + (context != null ? context.hashCode() : 0);
+        result = 31 * result + (placement != null ? placement.hashCode() : 0);
+        result = 31 * result + (board != null ? board.hashCode() : 0);
+        return result;
+    }
+}

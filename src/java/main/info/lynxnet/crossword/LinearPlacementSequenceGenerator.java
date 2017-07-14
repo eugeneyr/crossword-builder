@@ -1,13 +1,23 @@
 package info.lynxnet.crossword;
 
-public class LinearPlacementSequenceGenerator implements PlacementSequenceGenerator {
-    private int boardSize;
+import java.util.ArrayList;
+import java.util.List;
 
+public class LinearPlacementSequenceGenerator extends AbstractPlacementSequenceGenerator {
     public LinearPlacementSequenceGenerator(int boardSize) {
-        super();
-        this.boardSize = boardSize;
+        super(boardSize);
     }
 
+    @Override
+    protected List<Integer> getIndexes() {
+        List<Integer> indexes = new ArrayList<>(boardSize);
+        for (int i = 0; i < boardSize; i++) {
+            indexes.add(i);
+        }
+        return indexes;
+    }
+
+    /*
     @Override
     public int getBoardSize() {
         return boardSize;
@@ -42,4 +52,5 @@ public class LinearPlacementSequenceGenerator implements PlacementSequenceGenera
         }
         return null;
     }
+    */
 }

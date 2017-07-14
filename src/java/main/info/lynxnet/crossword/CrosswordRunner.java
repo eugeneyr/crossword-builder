@@ -1,5 +1,7 @@
 package info.lynxnet.crossword;
 
+import info.lynxnet.crossword.treesome.BeautifulTreesomeCrossword;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,8 @@ public class CrosswordRunner {
     public static BeautifulCrossword getCrosswordInstance(String arg) {
         if ("parallel".equals(arg)) {
             return new ParallelBeautifulCrossword();
+        } else if ("treesome".equals(arg)) {
+            return new BeautifulTreesomeCrossword();
         }
         return new BeautifulCrossword();
     }
