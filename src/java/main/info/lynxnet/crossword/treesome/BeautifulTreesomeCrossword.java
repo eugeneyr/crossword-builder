@@ -1,7 +1,9 @@
-package info.lynxnet.crossword;
+package info.lynxnet.crossword.treesome;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import info.lynxnet.crossword.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 
@@ -147,83 +149,17 @@ N = 87
  Weights are  4  10  2  2
 
 */
-public class BeautifulCrossword {
-    protected WordStore store;
-    protected int n;
-    protected int[] weights;
-    protected Set<Board> bestPuzzles = new HashSet<>();
-    protected double topScore = 0.0;
-
-    public void addKnownPuzzle(Board board) {
-        long noOfKnownPuzzles = Metrics.knownPuzzles.incrementAndGet();
-        String[] b = board.asStringArray();
-        double score = calculateScore(b);
-        if (score > topScore) {
-            bestPuzzles.clear();
-            bestPuzzles.add(board);
-            topScore = score;
-            System.out.println(
-                    String.format("*** FOUND *** KNOWN PUZZLES = %d *** WORDS = %d/%d *** SCORE = %f ",
-                            noOfKnownPuzzles,
-                            board.getWords().size(), store.getWords().size(),
-                            score));
-            for (String s : b) {
-                System.out.println(s);
-            }
-        } else if (score == topScore) {
-            bestPuzzles.add(board);
-            System.out.println(
-                    String.format("*** FOUND ANOTHER *** KNOWN PUZZLES = %d *** WORDS = %d/%d *** SCORE = %f ",
-                            noOfKnownPuzzles,
-                            board.getWords().size(), store.getWords().size(),
-                            score));
-            for (String s : b) {
-                System.out.println(s);
-            }
-        }
-    }
-
-    public void printBoard(Board board) {
-        String[] b = board.asStringArray();
-        double score = calculateScore(b);
-        System.out.println(
-                String.format("SCORE = %f\nWORDS = %d/%d",
-                        score, board.getWords().size(), store.getWords().size()));
-        for (String s : b) {
-            System.out.println(s);
-        }
-    }
-
-    public BeautifulCrossword(String[] words, int n, int[] weights) {
+public class BeautifulTreesomeCrossword extends BeautifulCrossword {
+    public BeautifulTreesomeCrossword(String[] words, int n, int[] weights) {
         this.n = n;
         this.weights = weights;
         this.store = new WordStore(words);
     }
 
-    public BeautifulCrossword() {
+    public BeautifulTreesomeCrossword() {
     }
 
-    public WordStore getStore() {
-        return store;
-    }
-
-    public int getN() {
-        return n;
-    }
-
-    public int[] getWeights() {
-        return weights;
-    }
-
-    public Set<Board> getBestPuzzles() {
-        return bestPuzzles;
-    }
-
-    public double getTopScore() {
-        return topScore;
-    }
-
-    public void execute(CrosswordBuilder builder) {
+    public void execute(TreesomeCrosswordBuilder builder) {
         try {
             builder.call();
         } catch (Exception e) {
@@ -231,33 +167,14 @@ public class BeautifulCrossword {
         }
     }
 
-    public String[] generateCrossword(int N, String[] words, int[] weights) {
-        store = new WordStore(words);
-        return generateCrossword(N, weights);
-    }
-
-    public String[] generateCrossword(int N, String wordFileName, int[] weights) {
-        store = new WordStore(wordFileName);
-        return generateCrossword(N, weights);
-    }
-
     protected String[] generateCrossword(int N, int[] weights) {
         n = N;
         this.weights = weights;
         Board board = new Board(n);
         try {
-            execute(new CrosswordBuilder(
-                    this,
-                    board,
-                    Constants.PLACEMENT_GENERATOR_CLASS.getConstructor(Integer.TYPE).newInstance(n).getFirst()));
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            execute(new TreesomeCrosswordBuilder(this, board, null));
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
 
         List<Board> puzzles = new ArrayList<>(getBestPuzzles());
@@ -272,13 +189,5 @@ public class BeautifulCrossword {
         return String.format(
                 " *** known puzzles = %d *** time spent = %.3fs speed = %.2f tasks/s",
                 Metrics.knownPuzzles.get(), seconds, speed);
-    }
-
-    public double calculateScore(String[] puzzle) {
-        return Metrics.calculateScore(puzzle, n, weights, store.getWords().toArray(new String[0]));
-    }
-
-    public void shutdown() {
-        // noop
     }
 }

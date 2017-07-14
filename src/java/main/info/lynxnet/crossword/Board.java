@@ -3,11 +3,11 @@ package info.lynxnet.crossword;
 import java.util.*;
 
 public class Board implements Cloneable {
-    private int n;
-    private Map<Direction, Collection<WordPlacement>> wordPlacements;
-    private Collection<String> words;
-    private Map<Direction, Collection<String>> wordsByDirection;
-    private Cell[][] grid;
+    protected int n;
+    protected Map<Direction, Collection<WordPlacement>> wordPlacements;
+    protected Collection<String> words;
+    protected Map<Direction, Collection<String>> wordsByDirection;
+    protected Cell[][] grid;
 
     public Map<Direction, Collection<WordPlacement>> getWordPlacements() {
         return wordPlacements;
@@ -417,6 +417,10 @@ public class Board implements Cloneable {
             rv[i] = cell.getLetter();
         }
         return rv;
+    }
+
+    public int getN() {
+        return n;
     }
 
     @Override

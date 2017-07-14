@@ -1,5 +1,7 @@
 package info.lynxnet.crossword;
 
+import info.lynxnet.crossword.treesome.BeautifulTreesomeCrossword;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,8 @@ public class CrosswordRunner {
     public static BeautifulCrossword getCrosswordInstance(String arg) {
         if ("parallel".equals(arg)) {
             return new ParallelBeautifulCrossword();
+        } else if ("treesome".equals(arg)) {
+            return new BeautifulTreesomeCrossword();
         }
         return new BeautifulCrossword();
     }
@@ -24,6 +28,8 @@ public class CrosswordRunner {
         BeautifulCrossword bc = getCrosswordInstance(args[6]);
         bc.generateCrossword(n, fileName, weights);
         List<Board> puzzles = new ArrayList<>(bc.getBestPuzzles());
+
+        System.out.println("FINAL STATS: " + bc.getState());
 
         if (puzzles.size() > 0) {
             Board best = puzzles.get(puzzles.size() - 1);

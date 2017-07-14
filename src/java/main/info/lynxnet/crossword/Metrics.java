@@ -12,6 +12,8 @@ public class Metrics {
     public static final AtomicLong permGenCount = new AtomicLong(0);
     public static final AtomicLong permCount = new AtomicLong(0);
     public static final AtomicLong maxPermSetSize = new AtomicLong(0);
+    public static final AtomicLong triedPlacements = new AtomicLong(0);
+    public static final AtomicLong blockedPlacements = new AtomicLong(0);
 
     static void addFatalError(String message) {
         System.out.println(message);

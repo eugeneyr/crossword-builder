@@ -6,31 +6,22 @@ import java.util.concurrent.Callable;
 public class CrosswordBuilder implements Callable<Void> {
     private int n;
     private BeautifulCrossword context;
-    private int i;
+    private Placement placement;
     private Board board;
-    private Direction direction;
 
-    public static final int MAX_PERM_SET_SIZE = 9;
-    public static final boolean RANK_BY_SCORES = true;
-
-    public CrosswordBuilder(BeautifulCrossword context, Board board, int n, int i, Direction direction) {
-        this.n = n;
+    public CrosswordBuilder(BeautifulCrossword context, Board board, Placement placement) {
+        this.n = placement.boardSize;
         this.context = context;
-        this.i = i;
         this.board = board;
-        this.direction = direction;
-    }
-
-    public int getN() {
-        return n;
+        this.placement = placement;
     }
 
     public int getI() {
-        return i;
+        return placement.position;
     }
 
     public Direction getDirection() {
-        return direction;
+        return placement.direction;
     }
 
     public Board getBoard() {
@@ -88,29 +79,22 @@ public class CrosswordBuilder implements Callable<Void> {
                     Metrics.maxPermSetSize.get());
             context.printBoard(board);
         }
-        // - if I = N, add B0 to the list of results.
-        if (i >= n) {
-            context.addKnownPuzzle(board);
-            return null;
-        }
 
-        Collection<Collection<WordPlacement>> permutations = getAllPermutations(board, i, direction);
+        Collection<Collection<WordPlacement>> permutations = getAllPermutations(
+                board, placement.position, placement.direction);
 
         for (Collection<WordPlacement> perm : permutations) {
             Board newBoard = board.clone();
             for (WordPlacement wp : perm) {
                 newBoard.addWordPlacement(wp);
             }
-            CrosswordBuilder newBuilder = null;
-            switch (direction) {
-                case ACROSS:
-                    newBuilder = new CrosswordBuilder(context, newBoard, n, i, Direction.DOWN);
-                    break;
-                case DOWN:
-                    newBuilder = new CrosswordBuilder(context, newBoard, n, i + 1, Direction.ACROSS);
-                    break;
+            Placement newPlace = placement.next;
+            // - if all placements are exhausted, add B0 to the list of results.
+            if (newPlace == null) {
+                context.addKnownPuzzle(newBoard);
+            } else {
+                context.execute(new CrosswordBuilder(context, newBoard, newPlace));
             }
-            context.execute(newBuilder);
         }
         return null;
     }
@@ -130,12 +114,12 @@ public class CrosswordBuilder implements Callable<Void> {
             Metrics.maxPermSetSize.compareAndSet(maxSize, result.size());
         }
 
-        if (RANK_BY_SCORES) {
+        if (Constants.RANK_BY_SCORES) {
             result.sort(new PermutationComparator(board, n, i, direction, context.getWeights()));
         }
 
-        if (result.size() > MAX_PERM_SET_SIZE) {
-            result = result.subList(0, MAX_PERM_SET_SIZE);
+        if (result.size() > Constants.MAX_PERM_SET_SIZE) {
+            result = result.subList(0, Constants.MAX_PERM_SET_SIZE);
         }
 
         return result;
@@ -189,23 +173,20 @@ public class CrosswordBuilder implements Callable<Void> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrosswordBuilder that = (CrosswordBuilder) o;
-        return n == that.n &&
-                i == that.i &&
-                Objects.equals(board, that.board) &&
-                direction == that.direction;
+        return Objects.equals(placement, that.placement);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(n, i, board, direction);
+        return Objects.hash(n, board, placement);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CrosswordBuilder{");
         sb.append("n=").append(n);
-        sb.append(", i=").append(i);
-        sb.append(", direction=").append(direction);
+        sb.append(", i=").append(placement.position);
+        sb.append(", direction=").append(placement.direction);
         sb.append(", board=\n").append(String.join("\n", board.asStringArray()));
         sb.append("\n}");
         return sb.toString();
