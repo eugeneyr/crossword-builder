@@ -41,19 +41,11 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
     @Override
     public Void call() throws Exception {
         long myNo = Metrics.builderInstances.incrementAndGet();
-        if (myNo % 1000000 == 0) {
-            double avgPermLength = 0.0;
-            long perms = Metrics.permCount.get();
-            long permGens = Metrics.permGenCount.get();
-            if (permGens > 0) {
-                avgPermLength = (double) perms / permGens;
-            }
-            System.out.printf("Instantiated builders = %d %s\nCurrent Best Score = %.3f\n" +
-                            "Avg Perm Length = %.3f\nMax Seen Perm Size Length=%d\nCurrent Board:\n",
+        if (myNo % 10000 == 0) {
+            System.out.printf("Instantiated builders = %d %s\nCurrent Best Score = %.3f\nCurrent Board:\n",
                     myNo,
                     context.getState(),
                     context.getTopScore(),
-                    avgPermLength,
                     Metrics.maxPermSetSize.get());
             context.printBoard(board);
         }
@@ -68,6 +60,7 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
             }
         }
 
+        Map<ChildPosition, PlacementTreeNode> children = new LinkedHashMap<>();
         // all possible ways to place the current word on the current board
         for (Direction dir : Direction.values()) {
             for (int row = 0; row < n; row++) {
@@ -75,16 +68,16 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
                     Board clonedBoard = board.clone();
                     try {
                         WordPlacement wp = new WordPlacement(placement.word, col, row, dir);
-                        clonedBoard.addWordPlacement(wp);
                         Metrics.triedPlacements.incrementAndGet();
+                        clonedBoard.addWordPlacement(wp);
                     } catch (IllegalArgumentException iae) {
                         // it's OK, we'll just skip this cell / direction combo
                         Metrics.blockedPlacements.incrementAndGet();
                         continue;
                     }
                     ChildPosition pos = new ChildPosition(placement.word, col, row, dir, false);
-                    PlacementTreeNode child = new PlacementTreeNode(null, placement, placement.availableWords, clonedBoard);
-                    placement.children.put(pos, child);
+                    PlacementTreeNode child = new PlacementTreeNode(null, null, placement.availableWords, clonedBoard);
+                    children.put(pos, child);
                 }
             }
         }
@@ -96,12 +89,12 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
         // no placement of the current word
         if (!placement.availableWords.isEmpty()) {
             ChildPosition noWordPos = new ChildPosition(placement.word, -1, -1, null, true);
-            PlacementTreeNode child = new PlacementTreeNode(null, placement, placement.availableWords, placement.board);
-            placement.children.put(noWordPos, child);
+            PlacementTreeNode child = new PlacementTreeNode(null, null, placement.availableWords, placement.board);
+            children.put(noWordPos, child);
             Metrics.triedPlacements.incrementAndGet();
         }
 
-        for (PlacementTreeNode ptn : placement.children.values()) {
+        for (PlacementTreeNode ptn : children.values()) {
             context.execute(new TreesomeCrosswordBuilder(context, ptn.getBoard(), ptn));
         }
 
