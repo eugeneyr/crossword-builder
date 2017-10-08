@@ -150,12 +150,6 @@ N = 87
 
 */
 public class BeautifulTreesomeCrossword extends BeautifulCrossword {
-    public BeautifulTreesomeCrossword(String[] words, int n, int[] weights) {
-        this.n = n;
-        this.weights = weights;
-        this.store = new WordStore(words);
-    }
-
     public BeautifulTreesomeCrossword() {
     }
 

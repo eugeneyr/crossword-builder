@@ -1,6 +1,5 @@
 package info.lynxnet.crossword.treesome;
 
-import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 import info.lynxnet.crossword.*;
 
 import java.util.*;
@@ -36,7 +35,7 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
     /*
          The outline of the algorithm to implement:
 
-         Build the tree of possible valid crossword boards using the set of all available words and the emty board.
+         Build the tree of possible valid crossword boards using the set of all available words and the empty board.
     */
     @Override
     public Void call() throws Exception {
