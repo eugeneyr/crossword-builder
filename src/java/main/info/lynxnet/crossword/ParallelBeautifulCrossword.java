@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 public class ParallelBeautifulCrossword extends BeautifulCrossword {
     protected BlockingQueue<Runnable> queue = new LinkedBlockingDeque<Runnable>(100000);
     protected ExecutorService service = new ThreadPoolExecutor(
-            2, Runtime.getRuntime().availableProcessors() / 2,
+            2, Runtime.getRuntime().availableProcessors(),
             10, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.CallerRunsPolicy());
 
     public long getActiveCount() {
