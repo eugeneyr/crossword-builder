@@ -5,20 +5,20 @@ import info.lynxnet.crossword.Board;
 import java.util.*;
 
 public class PlacementTreeNode {
-    protected PlacementTreeNode parent;
+//    protected PlacementTreeNode parent;
     protected String word;
     protected boolean valid;
     protected Board board;
     protected Set<String> availableWords = new LinkedHashSet<>();
     protected Map<ChildPosition, PlacementTreeNode> children = new LinkedHashMap<>();
 
-    public PlacementTreeNode getParent() {
-        return parent;
-    }
-
-    public void setParent(PlacementTreeNode parent) {
-        this.parent = parent;
-    }
+//    public PlacementTreeNode getParent() {
+//        return parent;
+//    }
+//
+//    public void setParent(PlacementTreeNode parent) {
+//        this.parent = parent;
+//    }
 
     public boolean isValid() {
         return valid;
@@ -43,9 +43,9 @@ public class PlacementTreeNode {
     public PlacementTreeNode(String word, PlacementTreeNode parent,
                              Collection<String> availableWords, Board board) {
         this.word = word;
-        if (parent != null) {
-            this.parent = parent;
-        }
+//        if (parent != null) {
+//            this.parent = parent;
+//        }
         if (board != null) {
             this.board = board;
         } else if (parent != null) {

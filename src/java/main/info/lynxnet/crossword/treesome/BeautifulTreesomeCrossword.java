@@ -150,12 +150,6 @@ N = 87
 
 */
 public class BeautifulTreesomeCrossword extends BeautifulCrossword {
-    public BeautifulTreesomeCrossword(String[] words, int n, int[] weights) {
-        this.n = n;
-        this.weights = weights;
-        this.store = new WordStore(words);
-    }
-
     public BeautifulTreesomeCrossword() {
     }
 
@@ -186,8 +180,11 @@ public class BeautifulTreesomeCrossword extends BeautifulCrossword {
         long tasks = Metrics.builderInstances.get();
         double seconds = ((double) (System.currentTimeMillis() - Metrics.START_TIME)) / 1000;
         double speed = tasks / seconds;
+        long tried = Metrics.triedPlacements.get();
+        long rejected = Metrics.blockedPlacements.get();
         return String.format(
-                " *** known puzzles = %d *** time spent = %.3fs speed = %.2f tasks/s",
+                " *** placements tried = %d placements rejected = %d diff = %d known puzzles = %d *** time spent = %.3fs speed = %.2f tasks/s",
+                tried, rejected, tried - rejected,
                 Metrics.knownPuzzles.get(), seconds, speed);
     }
 }
