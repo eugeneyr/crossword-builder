@@ -8,12 +8,14 @@ import java.util.List;
 public class CrosswordRunner {
 
     public static BeautifulCrossword getCrosswordInstance(String arg) {
-        if ("parallel".equals(arg)) {
-            return new ParallelBeautifulCrossword();
-        } else if ("treesome".equals(arg)) {
-            return new BeautifulTreesomeCrossword();
+        switch(arg) {
+            case "parallel":
+                return new ParallelBeautifulCrossword();
+            case "treesome":
+                return new BeautifulTreesomeCrossword();
+            default:
+                return new BeautifulCrossword();
         }
-        return new BeautifulCrossword();
     }
 
     public static void main(String[] args) {

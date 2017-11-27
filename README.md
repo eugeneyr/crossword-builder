@@ -1,1 +1,1 @@
-# crossword-builder
+# info.lynxnet.crossword-builder

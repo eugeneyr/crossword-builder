@@ -1512,7 +1512,7 @@ crossover
 crossroad
 crosstalk
 crosswalk
-crossword
+info.lynxnet.crossword
 crotchety
 crouching
 crucially

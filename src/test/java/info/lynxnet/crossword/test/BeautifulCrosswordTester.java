@@ -25,7 +25,7 @@ public class BeautifulCrosswordTester {
             System.out.println("N = " + N);
             // get the list of all dictionary words and choose the ones that
             // will be used
-            BufferedReader br = new BufferedReader(new FileReader("data/crossword/words.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("data/info.lynxnet.crossword/words.txt"));
             double prob = rnd.nextDouble() * 0.009 + 0.001; // probability of
             // each word to be
             // used
@@ -109,14 +109,14 @@ public class BeautifulCrosswordTester {
                     j = Arrays.binarySearch(words, met[i]);
                     // check whether this is a word
                     if (j < 0) {
-                        addFatalError("Your crossword contains word \""
+                        addFatalError("Your info.lynxnet.crossword contains word \""
                                 + met[i]
                                 + "\" which is not present in dictionary.");
                         return 0;
                     }
                     // check whether this word was already used
                     if (usedWord[j]) {
-                        addFatalError("Your crossword contains word \""
+                        addFatalError("Your info.lynxnet.crossword contains word \""
                                 + met[i] + "\" twice or more.");
                         return 0;
                     }
@@ -136,7 +136,7 @@ public class BeautifulCrosswordTester {
                             && (j == 0 || board[i][j - 1] == '.')
                             && (j == N - 1 || board[i][j + 1] == '.')) {
                         // all neighbors are . or outside of the board
-                        addFatalError("Your crossword contains a letter which is not part of any word (at "
+                        addFatalError("Your info.lynxnet.crossword contains a letter which is not part of any word (at "
                                 + i + ", " + j + ").");
                         return 0;
                     }

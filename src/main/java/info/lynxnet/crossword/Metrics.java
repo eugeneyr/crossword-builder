@@ -68,13 +68,13 @@ public class Metrics {
                 j = Arrays.binarySearch(words, met[i]);
                 // check whether this is a word
                 if (j < 0) {
-                    addFatalError("Your crossword contains word \""
+                    addFatalError("Your info.lynxnet.crossword contains word \""
                             + met[i] + "\" which is not present in dictionary.");
                     return 0;
                 }
                 // check whether this word was already used
                 if (usedWord[j]) {
-                    addFatalError("Your crossword contains word \"" + met[i] + "\" twice or more.");
+                    addFatalError("Your info.lynxnet.crossword contains word \"" + met[i] + "\" twice or more.");
                     return 0;
                 }
                 // mark the word as used
@@ -93,7 +93,7 @@ public class Metrics {
                         && (j == 0 || board[i][j - 1] == '.')
                         && (j == n - 1 || board[i][j + 1] == '.')) {
                     // all neighbors are . or outside of the board
-                    addFatalError("Your crossword contains a letter which is not part of any word (at "
+                    addFatalError("Your info.lynxnet.crossword contains a letter which is not part of any word (at "
                             + i + ", " + j + ").");
                     return 0;
                 }

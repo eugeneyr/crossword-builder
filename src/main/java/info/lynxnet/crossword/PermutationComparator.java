@@ -1,7 +1,8 @@
 package info.lynxnet.crossword;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 
 class PermutationComparator implements Comparator<Collection<WordPlacement>> {
     private Board board;

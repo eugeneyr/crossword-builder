@@ -36053,7 +36053,7 @@ crossways
 crosswind
 crosswinds
 crosswise
-crossword
+info.lynxnet.crossword
 crosswords
 crotch
 crotched

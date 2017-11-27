@@ -43,9 +43,6 @@ public class PlacementTreeNode {
     public PlacementTreeNode(String word, PlacementTreeNode parent,
                              Collection<String> availableWords, Board board) {
         this.word = word;
-//        if (parent != null) {
-//            this.parent = parent;
-//        }
         if (board != null) {
             this.board = board;
         } else if (parent != null) {

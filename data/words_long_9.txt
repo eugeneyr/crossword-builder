@@ -5405,7 +5405,7 @@ crosswalk
 crossways
 crosswind
 crosswise
-crossword
+info.lynxnet.crossword
 crotchets
 crotchety
 crouching

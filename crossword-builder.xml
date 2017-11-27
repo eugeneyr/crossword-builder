@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="crossword-builder" default="all">
+<project name="info.lynxnet.crossword-builder" default="all">
   
   
   <property file="crossword-builder.properties"/>
@@ -114,56 +114,56 @@
   <!-- Modules -->
   
   
-  <!-- Module crossword-builder -->
+  <!-- Module info.lynxnet.crossword-builder -->
   
-  <dirname property="module.crossword-builder.basedir" file="${ant.file}"/>
+  <dirname property="module.info.lynxnet.crossword-builder.basedir" file="${ant.file}"/>
   
   
   <property name="module.jdk.home.crossword-builder" value="${project.jdk.home}"/>
   <property name="module.jdk.bin.crossword-builder" value="${project.jdk.bin}"/>
   <property name="module.jdk.classpath.crossword-builder" value="${project.jdk.classpath}"/>
   
-  <property name="compiler.args.crossword-builder" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  <property name="compiler.args.info.lynxnet.crossword-builder" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
   
-  <property name="crossword-builder.output.dir" value="${module.crossword-builder.basedir}/out/production/crossword-builder"/>
-  <property name="crossword-builder.testoutput.dir" value="${module.crossword-builder.basedir}/out/test/crossword-builder"/>
+  <property name="info.lynxnet.crossword-builder.output.dir" value="${module.crossword-builder.basedir}/out/production/crossword-builder"/>
+  <property name="info.lynxnet.crossword-builder.testoutput.dir" value="${module.crossword-builder.basedir}/out/test/crossword-builder"/>
   
-  <path id="crossword-builder.module.bootclasspath">
+  <path id="info.lynxnet.crossword-builder.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="crossword-builder.module.production.classpath">
+  <path id="info.lynxnet.crossword-builder.module.production.classpath">
     <path refid="${module.jdk.classpath.crossword-builder}"/>
     <path refid="library.lib.classpath"/>
   </path>
   
-  <path id="crossword-builder.runtime.production.module.classpath">
+  <path id="info.lynxnet.crossword-builder.runtime.production.module.classpath">
     <pathelement location="${crossword-builder.output.dir}"/>
     <path refid="library.lib.classpath"/>
   </path>
   
-  <path id="crossword-builder.module.classpath">
+  <path id="info.lynxnet.crossword-builder.module.classpath">
     <path refid="${module.jdk.classpath.crossword-builder}"/>
     <pathelement location="${crossword-builder.output.dir}"/>
     <path refid="library.lib.classpath"/>
   </path>
   
-  <path id="crossword-builder.runtime.module.classpath">
+  <path id="info.lynxnet.crossword-builder.runtime.module.classpath">
     <pathelement location="${crossword-builder.testoutput.dir}"/>
     <pathelement location="${crossword-builder.output.dir}"/>
     <path refid="library.lib.classpath"/>
   </path>
   
   
-  <patternset id="excluded.from.module.crossword-builder">
+  <patternset id="excluded.from.module.info.lynxnet.crossword-builder">
     <patternset refid="ignored.files"/>
   </patternset>
   
-  <patternset id="excluded.from.compilation.crossword-builder">
+  <patternset id="excluded.from.compilation.info.lynxnet.crossword-builder">
     <patternset refid="excluded.from.module.crossword-builder"/>
   </patternset>
   
-  <path id="crossword-builder.module.sourcepath">
+  <path id="info.lynxnet.crossword-builder.module.sourcepath">
     <dirset dir="${module.crossword-builder.basedir}">
       <include name="src/java/test"/>
       <include name="src/java/main"/>
@@ -171,9 +171,9 @@
   </path>
   
   
-  <target name="compile.module.crossword-builder" depends="compile.module.crossword-builder.production,compile.module.crossword-builder.tests" description="Compile module crossword-builder"/>
+  <target name="compile.module.info.lynxnet.crossword-builder" depends="compile.module.crossword-builder.production,compile.module.crossword-builder.tests" description="Compile module info.lynxnet.crossword-builder"/>
   
-  <target name="compile.module.crossword-builder.production" description="Compile module crossword-builder; production classes">
+  <target name="compile.module.info.lynxnet.crossword-builder.production" description="Compile module info.lynxnet.crossword-builder; production classes">
     <mkdir dir="${crossword-builder.output.dir}"/>
     <javac destdir="${crossword-builder.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.crossword-builder}/javac">
       <compilerarg line="${compiler.args.crossword-builder}"/>
@@ -184,20 +184,20 @@
     </javac>
     
     <copy todir="${crossword-builder.output.dir}">
-      <fileset dir="${module.crossword-builder.basedir}/src/java/test">
+      <fileset dir="/">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
-      <fileset dir="${module.crossword-builder.basedir}/src/java/main">
+      <fileset dir="/">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
     </copy>
   </target>
   
-  <target name="compile.module.crossword-builder.tests" depends="compile.module.crossword-builder.production" description="compile module crossword-builder; test classes" unless="skip.tests"/>
+  <target name="compile.module.info.lynxnet.crossword-builder.tests" depends="compile.module.crossword-builder.production" description="compile module info.lynxnet.crossword-builder; test classes" unless="skip.tests"/>
   
-  <target name="clean.module.crossword-builder" description="cleanup module">
+  <target name="clean.module.info.lynxnet.crossword-builder" description="cleanup module">
     <delete dir="${crossword-builder.output.dir}"/>
     <delete dir="${crossword-builder.testoutput.dir}"/>
   </target>

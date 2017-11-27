@@ -1,7 +1,8 @@
 package info.lynxnet.crossword;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class ParallelBeautifulCrossword extends BeautifulCrossword {
