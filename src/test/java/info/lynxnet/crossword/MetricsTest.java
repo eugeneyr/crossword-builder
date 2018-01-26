@@ -4,10 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 public class MetricsTest {
     private String[] words = {

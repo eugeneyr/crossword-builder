@@ -33,12 +33,14 @@ class PermutationComparator implements Comparator<Collection<WordPlacement>> {
     }
 
     double computeScore(Collection<WordPlacement> perm) {
-        char[] existingLine = board.getLine(i, direction);
-        char[] permLine = toChars(perm);
-        char[] newLine = superpose(existingLine, permLine);
+//        char[] existingLine = board.getLine(i, direction);
+//        char[] permLine = toChars(perm);
+//        char[] newLine = superpose(existingLine, permLine);
 
         int totalLength = perm.stream().map(wp -> wp.getWord().length()).reduce(0, (a, b) -> a + b);
 
+        return totalLength;
+        /*
         double avgLength = (double) totalLength / perm.size();
 
         double newWordsFillScore = (double) totalLength / n;
@@ -73,6 +75,7 @@ class PermutationComparator implements Comparator<Collection<WordPlacement>> {
 
         double crossingScore = filling != 0 ? (double) crossings / filling : 0;
         return weights[0] * fillingScore + weights[2] * symmetryScore + weights[3] * crossingScore;
+        */
     }
 
     char[] toChars(Collection<WordPlacement> perm) {

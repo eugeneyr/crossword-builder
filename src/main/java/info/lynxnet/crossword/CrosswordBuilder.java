@@ -114,12 +114,13 @@ public class CrosswordBuilder implements Callable<Void> {
             Metrics.maxPermSetSize.compareAndSet(maxSize, result.size());
         }
 
-        if (Constants.RANK_BY_SCORES) {
+        if (Settings.getInstance().isRankByScores()) {
             result.sort(new PermutationComparator(board, n, i, direction, context.getWeights()));
         }
 
-        if (result.size() > Constants.MAX_PERM_SET_SIZE) {
-            result = result.subList(0, Constants.MAX_PERM_SET_SIZE);
+        int maxPermSetSize = Settings.getInstance().getMaxPermSetSize();
+        if (result.size() > maxPermSetSize) {
+            result = new ArrayList<>(result.subList(0, maxPermSetSize));
         }
 
         return result;

@@ -16,7 +16,7 @@ Problem Statement
 
 You are given the size of the board N, the list of allowed words and the list of weights used to
 balance the scores on individual criteria.
-You have to return a String[] which contains your info.lynxnet.crossword. Each element corresponds to one row of the board.
+You have to return a String[] which contains your crossword. Each element corresponds to one row of the board.
 '.' mark empty cells, and uppercase letters mark the cells in which letters are written (letter cells).
 Rows must be listed from top to bottom, and cells within each row must be listed from left to right.
 Each maximal vertical sequence (when read from top to bottom) and horizontal sequence (when read from left to right)
@@ -24,7 +24,7 @@ of two and more letters must be a valid word (i.e., it must be present in words)
 Each letter must be a part of at least one word (vertical or horizontal).
 Each word can be used at most once.
 
-A valid info.lynxnet.crossword will be scored by calculating the scores on 4 criteria:
+A valid crossword will be scored by calculating the scores on 4 criteria:
 
 Board filling score is the total number of letter cells, divided by the total number of cells on the board (N*N).
 

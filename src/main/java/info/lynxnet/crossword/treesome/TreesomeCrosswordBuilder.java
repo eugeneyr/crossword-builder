@@ -1,9 +1,6 @@
 package info.lynxnet.crossword.treesome;
 
-import info.lynxnet.crossword.Board;
-import info.lynxnet.crossword.Direction;
-import info.lynxnet.crossword.Metrics;
-import info.lynxnet.crossword.WordPlacement;
+import info.lynxnet.crossword.*;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -11,13 +8,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-public class TreesomeCrosswordBuilder implements Callable<Void> {
+public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callable<Void> {
     private int n;
     private BeautifulTreesomeCrossword context;
     private PlacementTreeNode placement;
     private Board board;
 
     public TreesomeCrosswordBuilder(BeautifulTreesomeCrossword context, Board board, PlacementTreeNode placement) {
+        super(context, board, null);
         this.n = board.getN();
         this.context = context;
         this.board = board;
@@ -38,11 +36,9 @@ public class TreesomeCrosswordBuilder implements Callable<Void> {
         return board;
     }
 
-    /*
-         The outline of the algorithm to implement:
-
-         Build the tree of possible valid info.lynxnet.crossword boards using the set of all available words and the empty board.
-    */
+    /**
+     *  Build the tree of possible valid info.lynxnet.crossword boards using the set of all available words and the empty board.
+     */
     @Override
     public Void call() throws Exception {
         long myNo = Metrics.builderInstances.incrementAndGet();

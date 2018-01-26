@@ -1,12 +1,8 @@
 package info.lynxnet.crossword.test;
 
 import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
 import java.io.*;
 import java.security.*;
-import javax.swing.*;
 
 public class BeautifulCrosswordTester {
     int N; // rows/columns in the field

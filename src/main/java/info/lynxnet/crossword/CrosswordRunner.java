@@ -1,34 +1,16 @@
 package info.lynxnet.crossword;
 
-import info.lynxnet.crossword.treesome.BeautifulTreesomeCrossword;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CrosswordRunner {
 
-    public static BeautifulCrossword getCrosswordInstance(String arg) {
-        switch(arg) {
-            case "parallel":
-                return new ParallelBeautifulCrossword();
-            case "treesome":
-                return new BeautifulTreesomeCrossword();
-            default:
-                return new BeautifulCrossword();
-        }
-    }
-
     public static void main(String[] args) {
-        String fileName = args[0];
-        int n = Integer.parseInt(args[1]);
-        int[] weights = {
-                Integer.parseInt(args[2]),
-                Integer.parseInt(args[3]),
-                Integer.parseInt(args[4]),
-                Integer.parseInt(args[5]),
-        };
-        BeautifulCrossword bc = getCrosswordInstance(args[6]);
-        bc.generateCrossword(n, fileName, weights);
+        Settings settings = Settings.configure(args);
+        BeautifulCrossword bc = BuilderType.getBuilder(settings.getBuilderName());
+        System.out.println("Settings to be used: " + settings.toString());
+
+        bc.generateCrossword(settings.getBoardSize(), settings.getFileName(), settings.getWeights());
         List<Board> puzzles = new ArrayList<>(bc.getBestPuzzles());
 
         System.out.println("FINAL STATS: " + bc.getState());

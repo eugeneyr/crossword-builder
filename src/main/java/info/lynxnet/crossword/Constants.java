@@ -8,5 +8,5 @@ public interface Constants {
     int[] DEFAULT_WEIGHTS = {6, 8, 7, 10};
     String DEFAULT_FILE_NAME = "data/crossword/topcoder.txt";
     int DEFAULT_BOARD_SIZE = 11;
-    String DEFAULT_BUILDER_NAME = "parallel";
+    BuilderType DEFAULT_BUILDER_TYPE = BuilderType.DEFAULT;
 }
