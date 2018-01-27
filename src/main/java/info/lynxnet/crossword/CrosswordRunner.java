@@ -6,7 +6,7 @@ import java.util.List;
 public class CrosswordRunner {
 
     public static void main(String[] args) {
-        Settings settings = Settings.configure(args);
+        Settings settings = Settings.configure(args, true);
         BeautifulCrossword bc = BuilderType.getBuilder(settings.getBuilderName());
         System.out.println("Settings to be used: " + settings.toString());
 

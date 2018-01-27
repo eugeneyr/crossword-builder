@@ -69,7 +69,7 @@ public class Settings {
                 .build());
     }
 
-    public static Settings configure(String[] args) {
+    public static Settings configure(String[] args, boolean printUsage) {
         CommandLineParser parser = getParser();
         try {
             CommandLine line = parser.parse(options, args);
@@ -106,6 +106,13 @@ public class Settings {
             }
         } catch (ParseException e) {
             System.out.println(e.getMessage());
+            if (!printUsage) {
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp("Usage", options);
+            }
+        }
+
+        if (printUsage) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("Usage", options);
         }
