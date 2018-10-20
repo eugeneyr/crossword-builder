@@ -53,179 +53,181 @@ public class Board implements Cloneable {
             );
         }
         String word = wp.getWord();
-        if (word == null) {
-            throw new IllegalArgumentException("Word is null");
-        }
-        if (words.contains(word)) {
+//        if (word == null) {
+//            throw new IllegalArgumentException("Word is null");
+//        }
+        if (word != null && words.contains(word)) {
             throw new IllegalArgumentException(String.format("Word already placed on the board: %s", word));
         }
         Direction dir = wp.getDirection();
         if (dir == null) {
             throw new IllegalArgumentException("Direction is null");
         }
-        int len = word.length();
-        switch (dir) {
-            case ACROSS:
-                int xAfter = wp.getX() + len;
-                if (xAfter > n) {
-                    throw new IllegalArgumentException(
-                            String.format("Word too long to fit on the board: %d, %d", wp.getX(), len)
-                    );
-                }
-                Cell[] row = grid[wp.getY()];
-                // boundary conditions
-                if (wp.getX() > 0) {
-                    Cell prevCell = row[wp.getX() - 1];
-                    if (!prevCell.isEmpty()) {
+        if (word != null) {
+            int len = word.length();
+            switch (dir) {
+                case ACROSS:
+                    int xAfter = wp.getX() + len;
+                    if (xAfter > n) {
                         throw new IllegalArgumentException(
-                                String.format("There is a letter in the preceding cell: %c", prevCell.getLetter())
+                                String.format("Word too long to fit on the board: %d, %d", wp.getX(), len)
                         );
                     }
-                }
+                    Cell[] row = grid[wp.getY()];
+                    // boundary conditions
+                    if (wp.getX() > 0) {
+                        Cell prevCell = row[wp.getX() - 1];
+                        if (!prevCell.isEmpty()) {
+                            throw new IllegalArgumentException(
+                                    String.format("There is a letter in the preceding cell: %c", prevCell.getLetter())
+                            );
+                        }
+                    }
 
-                // the cell immediately after the word should be empty!
-                if (xAfter < n) {
-                    Cell afterCell = row[xAfter];
-                    if (!afterCell.isEmpty()) {
-                        throw new IllegalArgumentException(
-                                String.format("There is a letter in the following cell: %c", afterCell.getLetter())
-                        );
-                    }
-                }
-                // for each cell check if we can place the word
-                for (int x = wp.getX(); x < xAfter; x++) {
-                    Cell cell = row[x];
-                    // 1) If the cell is initialized and has a letter in it:
-                    if (!cell.isEmpty()) {
-                        //  - check if there are no other words going in the same direction associated with it
-                        if (cell.getWord(wp.getDirection()) != null) {
+                    // the cell immediately after the word should be empty!
+                    if (xAfter < n) {
+                        Cell afterCell = row[xAfter];
+                        if (!afterCell.isEmpty()) {
                             throw new IllegalArgumentException(
-                                    String.format("The cell already has a word in the same direction: %d, %d", x, wp.getY())
+                                    String.format("There is a letter in the following cell: %c", afterCell.getLetter())
                             );
                         }
-                        //  - check if the word has the same letter at this position as the cell
-                        if (cell.getLetter() != word.charAt(x - wp.getX())) {
-                            throw new IllegalArgumentException(
-                                    String.format("The cell value differs from the one in the word: %c, %c",
-                                            cell.getLetter(), word.charAt(x - wp.getX()))
-                            );
-                        }
-                    } else {
-                        // 2) If the cell is not initialized or empty,
-                        //    check the cells directly above in and below it (if the rows are there)
-                        //    Both should be empty.
-                        if (wp.getY() > 0) {
-                            // check the cell above
-                            Cell cellAbove = grid[wp.getY() - 1][x];
-                            if (!cellAbove.isEmpty()) {
+                    }
+                    // for each cell check if we can place the word
+                    for (int x = wp.getX(); x < xAfter; x++) {
+                        Cell cell = row[x];
+                        // 1) If the cell is initialized and has a letter in it:
+                        if (!cell.isEmpty()) {
+                            //  - check if there are no other words going in the same direction associated with it
+                            if (cell.getWord(wp.getDirection()) != null) {
                                 throw new IllegalArgumentException(
-                                        String.format("The cell above an empty cell is not empty: %c",
-                                                cellAbove.getLetter()
-                                        )
+                                        String.format("The cell already has a word in the same direction: %d, %d", x, wp.getY())
                                 );
                             }
-                        }
-                        if (wp.getY() < n - 1) {
-                            // check the cell below
-                            Cell cellBelow = grid[wp.getY() + 1][x];
-                            if (!cellBelow.isEmpty()) {
+                            //  - check if the word has the same letter at this position as the cell
+                            if (cell.getLetter() != word.charAt(x - wp.getX())) {
                                 throw new IllegalArgumentException(
-                                        String.format("The cell below an empty cell is not empty: %c",
-                                                cellBelow.getLetter()
-                                        )
+                                        String.format("The cell value differs from the one in the word: %c, %c",
+                                                cell.getLetter(), word.charAt(x - wp.getX()))
                                 );
+                            }
+                        } else {
+                            // 2) If the cell is not initialized or empty,
+                            //    check the cells directly above in and below it (if the rows are there)
+                            //    Both should be empty.
+                            if (wp.getY() > 0) {
+                                // check the cell above
+                                Cell cellAbove = grid[wp.getY() - 1][x];
+                                if (!cellAbove.isEmpty()) {
+                                    throw new IllegalArgumentException(
+                                            String.format("The cell above an empty cell is not empty: %c",
+                                                    cellAbove.getLetter()
+                                            )
+                                    );
+                                }
+                            }
+                            if (wp.getY() < n - 1) {
+                                // check the cell below
+                                Cell cellBelow = grid[wp.getY() + 1][x];
+                                if (!cellBelow.isEmpty()) {
+                                    throw new IllegalArgumentException(
+                                            String.format("The cell below an empty cell is not empty: %c",
+                                                    cellBelow.getLetter()
+                                            )
+                                    );
+                                }
                             }
                         }
                     }
-                }
 
-                // all checks are passed, set the cell values
-                for (int x = wp.getX(); x < xAfter; x++) {
-                    Cell cell = row[x];
-                    cell.setWord(wp);
-                }
-                break;
-            case DOWN:
-                int yAfter = wp.getY() + len;
-                if (yAfter > n) {
-                    throw new IllegalArgumentException(
-                            String.format("Word too long to fit on the board: %d, %d", wp.getY(), len)
-                    );
-                }
-                // boundary conditions
-                if (wp.getY() > 0) {
-                    Cell prevCell = grid[wp.getY() - 1][wp.getX()];
-                    if (!prevCell.isEmpty()) {
+                    // all checks are passed, set the cell values
+                    for (int x = wp.getX(); x < xAfter; x++) {
+                        Cell cell = row[x];
+                        cell.setWord(wp);
+                    }
+                    break;
+                case DOWN:
+                    int yAfter = wp.getY() + len;
+                    if (yAfter > n) {
                         throw new IllegalArgumentException(
-                                String.format("There is a letter in the preceding cell: %c", prevCell.getLetter())
+                                String.format("Word too long to fit on the board: %d, %d", wp.getY(), len)
                         );
                     }
-                }
-                if (yAfter < n) {
-                    Cell afterCell = grid[yAfter][wp.getX()];
-                    if (!afterCell.isEmpty()) {
-                        throw new IllegalArgumentException(
-                                String.format("There is a letter in the following cell: %c", afterCell.getLetter())
-                        );
-                    }
-                }
-                // for each cell check if we can place the word
-                for (int y = wp.getY(); y < yAfter; y++) {
-                    Cell cell = grid[y][wp.getX()];
-                    // 1) If the cell is initialized and has a letter in it:
-                    if (!cell.isEmpty()) {
-                        //  - check if there are no other words going in the same direction associated with it
-                        if (cell.getWord(wp.getDirection()) != null) {
+                    // boundary conditions
+                    if (wp.getY() > 0) {
+                        Cell prevCell = grid[wp.getY() - 1][wp.getX()];
+                        if (!prevCell.isEmpty()) {
                             throw new IllegalArgumentException(
-                                    String.format("The cell already has a word in the same direction: %d, %d", y, wp.getY())
+                                    String.format("There is a letter in the preceding cell: %c", prevCell.getLetter())
                             );
                         }
-                        //  - check if the word has the same letter at this position as the cell
-                        if (cell.getLetter() != word.charAt(y - wp.getY())) {
+                    }
+                    if (yAfter < n) {
+                        Cell afterCell = grid[yAfter][wp.getX()];
+                        if (!afterCell.isEmpty()) {
                             throw new IllegalArgumentException(
-                                    String.format("The cell value differs from the one in the word: %c, %c",
-                                            cell.getLetter(), word.charAt(y - wp.getY()))
+                                    String.format("There is a letter in the following cell: %c", afterCell.getLetter())
                             );
                         }
-                    } else {
-                        // 2) If the cell is not initialized or empty,
-                        //    check the cells directly above in and below it (if the rows are there)
-                        //    Both should be empty.
-                        if (wp.getX() > 0) {
-                            // check the cell to the left
-                            Cell cellToTheLeft = grid[y][wp.getX() - 1];
-                            if (!cellToTheLeft.isEmpty()) {
+                    }
+                    // for each cell check if we can place the word
+                    for (int y = wp.getY(); y < yAfter; y++) {
+                        Cell cell = grid[y][wp.getX()];
+                        // 1) If the cell is initialized and has a letter in it:
+                        if (!cell.isEmpty()) {
+                            //  - check if there are no other words going in the same direction associated with it
+                            if (cell.getWord(wp.getDirection()) != null) {
                                 throw new IllegalArgumentException(
-                                        String.format("The cell to the left of an empty cell is not empty: %c",
-                                                cellToTheLeft.getLetter()
-                                        )
+                                        String.format("The cell already has a word in the same direction: %d, %d", y, wp.getY())
                                 );
                             }
-                        }
-                        if (wp.getX() < n - 1) {
-                            // check the cell to the right
-                            Cell cellToTheRight = grid[y][wp.getX() + 1];
-                            if (!cellToTheRight.isEmpty()) {
+                            //  - check if the word has the same letter at this position as the cell
+                            if (cell.getLetter() != word.charAt(y - wp.getY())) {
                                 throw new IllegalArgumentException(
-                                        String.format("The cell to the right an empty cell is not empty: %c",
-                                                cellToTheRight.getLetter()
-                                        )
+                                        String.format("The cell value differs from the one in the word: %c, %c",
+                                                cell.getLetter(), word.charAt(y - wp.getY()))
                                 );
+                            }
+                        } else {
+                            // 2) If the cell is not initialized or empty,
+                            //    check the cells directly above in and below it (if the rows are there)
+                            //    Both should be empty.
+                            if (wp.getX() > 0) {
+                                // check the cell to the left
+                                Cell cellToTheLeft = grid[y][wp.getX() - 1];
+                                if (!cellToTheLeft.isEmpty()) {
+                                    throw new IllegalArgumentException(
+                                            String.format("The cell to the left of an empty cell is not empty: %c",
+                                                    cellToTheLeft.getLetter()
+                                            )
+                                    );
+                                }
+                            }
+                            if (wp.getX() < n - 1) {
+                                // check the cell to the right
+                                Cell cellToTheRight = grid[y][wp.getX() + 1];
+                                if (!cellToTheRight.isEmpty()) {
+                                    throw new IllegalArgumentException(
+                                            String.format("The cell to the right an empty cell is not empty: %c",
+                                                    cellToTheRight.getLetter()
+                                            )
+                                    );
+                                }
                             }
                         }
                     }
-                }
-                // all checks are passed, set the cell values
-                for (int y = wp.getY(); y < yAfter; y++) {
-                    Cell cell = grid[y][wp.getX()];
-                    cell.setWord(wp);
-                }
-                break;
+                    // all checks are passed, set the cell values
+                    for (int y = wp.getY(); y < yAfter; y++) {
+                        Cell cell = grid[y][wp.getX()];
+                        cell.setWord(wp);
+                    }
+                    break;
+            }
+            // common operations for word addition
+            words.add(word);
+            wordsByDirection.get(wp.getDirection()).add(word);
         }
-        // common operations for word addition
-        words.add(word);
         wordPlacements.get(wp.getDirection()).add(wp);
-        wordsByDirection.get(wp.getDirection()).add(word);
     }
 
     public Collection<String> getAvailablePatterns(int x, int y, Direction dir) {
@@ -358,6 +360,7 @@ public class Board implements Cloneable {
 
     /**
      * Deep copy the Board object.
+     *
      * @return a deep copy of the original Board object.
      * @throws CloneNotSupportedException
      */
@@ -440,5 +443,138 @@ public class Board implements Cloneable {
         String[] strs = this.asStringArray();
         String singleString = String.join("", strs);
         return Objects.hash(n, singleString);
+    }
+
+    public boolean canBePlaced(WordPlacement wp) {
+        if (wp == null) {
+            return false;
+        }
+        if (wp.getX() < 0 || wp.getY() < 0 || wp.getX() >= n || wp.getY() >= n) {
+            return false;
+        }
+        String word = wp.getWord();
+//        if (word == null) {
+//            return false;
+//        }
+        if (word != null && words.contains(word)) {
+            return false;
+        }
+        Direction dir = wp.getDirection();
+        if (dir == null) {
+            return false;
+        }
+        if (word != null) {
+            int len = word.length();
+            switch (dir) {
+                case ACROSS:
+                    int xAfter = wp.getX() + len;
+                    if (xAfter > n) {
+                        return false;
+                    }
+                    Cell[] row = grid[wp.getY()];
+                    // boundary conditions
+                    if (wp.getX() > 0) {
+                        Cell prevCell = row[wp.getX() - 1];
+                        if (!prevCell.isEmpty()) {
+                            return false;
+                        }
+                    }
+
+                    // the cell immediately after the word should be empty!
+                    if (xAfter < n) {
+                        Cell afterCell = row[xAfter];
+                        if (!afterCell.isEmpty()) {
+                            return false;
+                        }
+                    }
+                    // for each cell check if we can place the word
+                    for (int x = wp.getX(); x < xAfter; x++) {
+                        Cell cell = row[x];
+                        // 1) If the cell is initialized and has a letter in it:
+                        if (!cell.isEmpty()) {
+                            //  - check if there are no other words going in the same direction associated with it
+                            if (cell.getWord(wp.getDirection()) != null) {
+                                return false;
+                            }
+                            //  - check if the word has the same letter at this position as the cell
+                            if (cell.getLetter() != word.charAt(x - wp.getX())) {
+                                return false;
+                            }
+                        } else {
+                            // 2) If the cell is not initialized or empty,
+                            //    check the cells directly above in and below it (if the rows are there)
+                            //    Both should be empty.
+                            if (wp.getY() > 0) {
+                                // check the cell above
+                                Cell cellAbove = grid[wp.getY() - 1][x];
+                                if (!cellAbove.isEmpty()) {
+                                    return false;
+                                }
+                            }
+                            if (wp.getY() < n - 1) {
+                                // check the cell below
+                                Cell cellBelow = grid[wp.getY() + 1][x];
+                                if (!cellBelow.isEmpty()) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case DOWN:
+                    int yAfter = wp.getY() + len;
+                    if (yAfter > n) {
+                        return false;
+                    }
+                    // boundary conditions
+                    if (wp.getY() > 0) {
+                        Cell prevCell = grid[wp.getY() - 1][wp.getX()];
+                        if (!prevCell.isEmpty()) {
+                            return false;
+                        }
+                    }
+                    if (yAfter < n) {
+                        Cell afterCell = grid[yAfter][wp.getX()];
+                        if (!afterCell.isEmpty()) {
+                            return false;
+                        }
+                    }
+                    // for each cell check if we can place the word
+                    for (int y = wp.getY(); y < yAfter; y++) {
+                        Cell cell = grid[y][wp.getX()];
+                        // 1) If the cell is initialized and has a letter in it:
+                        if (!cell.isEmpty()) {
+                            //  - check if there are no other words going in the same direction associated with it
+                            if (cell.getWord(wp.getDirection()) != null) {
+                                return false;
+                            }
+                            //  - check if the word has the same letter at this position as the cell
+                            if (cell.getLetter() != word.charAt(y - wp.getY())) {
+                                return false;
+                            }
+                        } else {
+                            // 2) If the cell is not initialized or empty,
+                            //    check the cells directly above in and below it (if the rows are there)
+                            //    Both should be empty.
+                            if (wp.getX() > 0) {
+                                // check the cell to the left
+                                Cell cellToTheLeft = grid[y][wp.getX() - 1];
+                                if (!cellToTheLeft.isEmpty()) {
+                                    return false;
+                                }
+                            }
+                            if (wp.getX() < n - 1) {
+                                // check the cell to the right
+                                Cell cellToTheRight = grid[y][wp.getX() + 1];
+                                if (!cellToTheRight.isEmpty()) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+        return true;
     }
 }

@@ -1,11 +1,11 @@
 package info.lynxnet.crossword;
 
-import info.lynxnet.crossword.treesome.BeautifulTreesomeCrossword;
+import info.lynxnet.crossword.krisskross.BeautifulKrissKrossCrossword;
 
 public enum BuilderType {
     DEFAULT(BeautifulCrossword.class),
     PARALLEL(ParallelBeautifulCrossword.class),
-    TREESOME(BeautifulTreesomeCrossword.class);
+    TREESOME(BeautifulKrissKrossCrossword.class);
 
     BuilderType(Class<? extends BeautifulCrossword> builderClass) {
         this.builderClass = builderClass;

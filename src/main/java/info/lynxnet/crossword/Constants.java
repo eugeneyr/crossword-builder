@@ -3,7 +3,6 @@ package info.lynxnet.crossword;
 public interface Constants {
     char EMPTY_CELL_FILLER = '.';
     int MAX_PERM_SET_SIZE = 5;
-    boolean RANK_BY_SCORES = true;
     Class<? extends PlacementSequenceGenerator> PLACEMENT_GENERATOR_CLASS = LinearPlacementSequenceGenerator.class;
     int[] DEFAULT_WEIGHTS = {6, 8, 7, 10};
     String DEFAULT_FILE_NAME = "data/crossword/topcoder.txt";

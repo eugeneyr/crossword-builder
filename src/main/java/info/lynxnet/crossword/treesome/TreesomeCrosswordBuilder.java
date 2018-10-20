@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callable<Void> {
     private int n;
     private BeautifulTreesomeCrossword context;
-    private PlacementTreeNode placement;
+    private info.lynxnet.crossword.treesome.PlacementTreeNode placement;
     private Board board;
 
     public TreesomeCrosswordBuilder(BeautifulTreesomeCrossword context, Board board, PlacementTreeNode placement) {
@@ -28,7 +28,7 @@ public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callab
                 throw new IllegalStateException("The collection of available words is empty");
             }
             String firstWord = words.iterator().next();
-            this.placement = new PlacementTreeNode(firstWord, null, words, board);
+            this.placement = new info.lynxnet.crossword.treesome.PlacementTreeNode(firstWord, null, words, board);
         }
     }
 
@@ -61,7 +61,7 @@ public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callab
             }
         }
 
-        Map<ChildPosition, PlacementTreeNode> children = new LinkedHashMap<>();
+        Map<info.lynxnet.crossword.treesome.ChildPosition, info.lynxnet.crossword.treesome.PlacementTreeNode> children = new LinkedHashMap<>();
         // all possible ways to place the current word on the current board
         for (Direction dir : Direction.values()) {
             for (int row = 0; row < n; row++) {
@@ -76,8 +76,8 @@ public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callab
                         Metrics.blockedPlacements.incrementAndGet();
                         continue;
                     }
-                    ChildPosition pos = new ChildPosition(placement.word, col, row, dir, false);
-                    PlacementTreeNode child = new PlacementTreeNode(null, null, placement.availableWords, clonedBoard);
+                    info.lynxnet.crossword.treesome.ChildPosition pos = new info.lynxnet.crossword.treesome.ChildPosition(placement.word, col, row, dir, false);
+                    info.lynxnet.crossword.treesome.PlacementTreeNode child = new info.lynxnet.crossword.treesome.PlacementTreeNode(null, null, placement.availableWords, clonedBoard);
                     children.put(pos, child);
                 }
             }
@@ -90,7 +90,7 @@ public class TreesomeCrosswordBuilder extends CrosswordBuilder implements Callab
         // no placement of the current word
         if (!placement.availableWords.isEmpty()) {
             ChildPosition noWordPos = new ChildPosition(placement.word, -1, -1, null, true);
-            PlacementTreeNode child = new PlacementTreeNode(null, null, placement.availableWords, placement.board);
+            PlacementTreeNode child = new info.lynxnet.crossword.treesome.PlacementTreeNode(null, null, placement.availableWords, placement.board);
             children.put(noWordPos, child);
             Metrics.triedPlacements.incrementAndGet();
         }

@@ -79,4 +79,17 @@ public class WordStore {
         return result;
     }
 
+    public Set<String> getWordsByCharacter(char c, Collection<String> blacklist) {
+        Set<String> result = new TreeSet<>();
+        for (WordBucket b: bucketsByWordLength.values()) {
+            Set<String> words = b.getWords(c);
+            result.addAll(words);
+        }
+        if (blacklist != null) {
+            result.removeAll(blacklist);
+        }
+        return result;
+    }
+
+
 }

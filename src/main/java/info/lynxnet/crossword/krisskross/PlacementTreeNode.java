@@ -1,4 +1,4 @@
-package info.lynxnet.crossword.treesome;
+package info.lynxnet.crossword.krisskross;
 
 import info.lynxnet.crossword.Board;
 

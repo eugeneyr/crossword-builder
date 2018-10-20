@@ -9,11 +9,6 @@ public class SpiralPlacementSequenceGenerator extends AbstractPlacementSequenceG
         this.boardSize = boardSize;
     }
 
-    @Override
-    public int getBoardSize() {
-        return boardSize;
-    }
-
     protected List<Integer> getIndexes() {
         List<Integer> indexes = new ArrayList<>(boardSize);
         for (int i = 0; i < boardSize; i++) {

@@ -4,6 +4,7 @@ import java.util.*;
 
 public class WordBucket {
     private Set<String> words = new HashSet<String>();
+    private Map<Character, Set<String>> charsToWords = new HashMap<>();
     private Map<Character, Map<Integer, Set<String>>> charsToPositions =
             new HashMap<Character, Map<Integer, Set<String>>>();
 
@@ -25,17 +26,11 @@ public class WordBucket {
         words.add(word);
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
-            Map<Integer, Set<String>> positionMap = charsToPositions.get(c);
-            if (positionMap == null) {
-                positionMap = new TreeMap<Integer, Set<String>>();
-                charsToPositions.put(c, positionMap);
-            }
-            Set<String> strings = positionMap.get(i);
-            if (strings == null) {
-                strings = new TreeSet<String>();
-                positionMap.put(i, strings);
-            }
+            Map<Integer, Set<String>> positionMap = charsToPositions.computeIfAbsent(c, k -> new TreeMap<Integer, Set<String>>());
+            Set<String> strings = positionMap.computeIfAbsent(i, k -> new TreeSet<String>());
             strings.add(word);
+            Set<String> wordsByChar = charsToWords.computeIfAbsent(c, k -> new TreeSet<String>());
+            wordsByChar.add(word);
         }
     }
 
@@ -54,14 +49,7 @@ public class WordBucket {
     }
 
     public Set<String> getWords(char c) {
-        Map<Integer, Set<String>> positionMap = charsToPositions.get(c);
-        LinkedHashSet<String> result = new LinkedHashSet<String>();
-        if (positionMap != null) {
-            for (Map.Entry<Integer, Set<String>> entry : positionMap.entrySet()) {
-                result.addAll(entry.getValue());
-            }
-        }
-        return result;
+        return charsToWords.computeIfAbsent(c, k -> new TreeSet<>());
     }
 
     public Set<String> getWords() {
